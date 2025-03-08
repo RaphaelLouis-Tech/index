@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guestbook</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        input, textarea { padding: 8px; font-size: 16px; }
+        button { padding: 10px; background-color: blue; color: white; border: none; cursor: pointer; }
+        .entry { border-bottom: 1px solid #ccc; padding: 10px 0; }
+    </style>
+</head>
+<body>
+    <h2>Guestbook</h2>
+    <form action="/submit" method="POST">
+        <input type="text" name="name" placeholder="Your Name" required>
+        <textarea name="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <h3>Messages</h3>
+    <div id="entries"></div>
+
+    <script>
+        async function fetchEntries() {
+            const response = await fetch('/entries');
+            const entries = await response.json();
+            const entriesDiv = document.getElementById("entries");
+            entriesDiv.innerHTML = entries.map(entry => 
+                `<div class="entry"><strong>${entry.name}</strong> (${entry.timestamp}): ${entry.message}</div>`
+            ).join('');
+        }
+
+        fetchEntries();
+    </script>
+</body>
+</html>
